@@ -1,0 +1,21 @@
+.home-container {
+    padding: 20px;
+  }
+  
+  .anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .error-container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .error-container button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+  }

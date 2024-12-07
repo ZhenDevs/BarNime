@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FaPlay, FaStar, FaCalendar, FaClock, FaFilm, FaCheckCircle, FaTv, FaInfoCircle } from 'react-icons/fa';
+import { FaPlay, FaStar, FaTv, FaInfoCircle } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 
 const AnimeDetail = () => {
   const { slug } = useParams();
@@ -9,6 +10,7 @@ const AnimeDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('episodes');
+  const { isDarkMode } = useTheme();
 
   useEffect(() => {
     const fetchAnimeDetails = async () => {
@@ -30,7 +32,7 @@ const AnimeDetail = () => {
   }, [slug]);
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-900 flex justify-center items-center">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'} flex justify-center items-center`}>
       <div className="relative w-24 h-24">
         <div className="absolute inset-0 border-4 border-blue-500/30 rounded-full"></div>
         <div className="absolute inset-0 border-4 border-blue-500 rounded-full animate-spin border-t-transparent"></div>
@@ -39,7 +41,7 @@ const AnimeDetail = () => {
   );
   
   if (error) return (
-    <div className="min-h-screen bg-gray-900 flex justify-center items-center">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'} flex justify-center items-center`}>
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -52,8 +54,6 @@ const AnimeDetail = () => {
   );
   
   if (!anime) return null;
-
-  const genres = Array.isArray(anime.genre) ? anime.genre : anime.genre ? [anime.genre] : [];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -75,9 +75,8 @@ const AnimeDetail = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-h-screen bg-gray-900 text-white"
+      className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}
     >
-      {/* Parallax Hero Section */}
       <div className="relative h-[500px] overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
@@ -87,13 +86,12 @@ const AnimeDetail = () => {
             transform: 'scale(1.1)'
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent">
+        <div className={`absolute inset-0 ${isDarkMode ? 'bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent' : 'bg-gradient-to-t from-gray-50 via-gray-50/80 to-transparent'}`}>
           <div className="container mx-auto px-4 h-full flex items-end pb-12">
             <motion.div 
               variants={itemVariants}
               className="flex flex-col md:flex-row gap-8 items-end"
             >
-              {/* Animated Thumbnail */}
               <motion.div 
                 whileHover={{ scale: 1.05 }}
                 className="w-64 flex-shrink-0"
@@ -105,7 +103,6 @@ const AnimeDetail = () => {
                 />
               </motion.div>
 
-              {/* Title and Quick Info */}
               <div className="flex-grow">
                 <motion.h1 
                   variants={itemVariants}
@@ -126,8 +123,6 @@ const AnimeDetail = () => {
                       <span className="font-semibold">{anime.score}</span>
                     </motion.div>
                   )}
-                  {/* Similar badges for other quick info */}
-                  {/* ... */}
                 </motion.div>
               </div>
             </motion.div>
@@ -135,7 +130,6 @@ const AnimeDetail = () => {
         </div>
       </div>
 
-      {/* Main Content with Tabs */}
       <div className="container mx-auto px-4 py-8">
         <div className="flex gap-4 mb-8">
           <TabButton 
@@ -166,7 +160,7 @@ const AnimeDetail = () => {
               >
                 <Link
                   to={`/watch/${episode.slug}`}
-                  className="block bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition-colors"
+                  className={`block ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-lg overflow-hidden hover:${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'} transition-colors`}
                 >
                   <div className="p-4 backdrop-blur-sm bg-gradient-to-b from-transparent to-black/50">
                     <div className="flex items-center justify-between">
@@ -188,31 +182,28 @@ const AnimeDetail = () => {
             animate={{ opacity: 1, y: 0 }}
             className="grid grid-cols-1 md:grid-cols-2 gap-8"
           >
-            {/* Synopsis */}
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 shadow-lg">
+            <div className={`bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 shadow-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
                 Synopsis
               </h2>
-              <p className="text-gray-300 leading-relaxed">{anime.synopsis}</p>
+              <p className="leading-relaxed">{anime.synopsis}</p>
             </div>
 
-            {/* Additional Info */}
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 shadow-lg">
+            <div className={`bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 shadow-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
               <h2 className="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
                 Information
               </h2>
               <div className="space-y-4">
-                {/* Info items */}
                 {Object.entries(anime)
                   .filter(([key]) => !['episodes', 'synopsis', 'thumbnail', 'title'].includes(key))
                   .map(([key, value]) => (
                     <motion.div
                       key={key}
                       whileHover={{ x: 10 }}
-                      className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-700/50 transition-colors"
+                      className={`flex items-center gap-4 p-3 rounded-lg hover:${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-300/50'} transition-colors`}
                     >
-                      <span className="text-gray-400 capitalize">{key.replace(/_/g, ' ')}:</span>
-                      <span className="text-white">{value}</span>
+                      <span className="capitalize">{key.replace(/_/g, ' ')}:</span>
+                      <span>{value}</span>
                     </motion.div>
                   ))}
               </div>
@@ -224,7 +215,6 @@ const AnimeDetail = () => {
   );
 };
 
-// Tab Button Component
 const TabButton = ({ active, onClick, icon, text }) => (
   <motion.button
     whileHover={{ scale: 1.05 }}

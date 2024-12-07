@@ -3,8 +3,10 @@ import { getTopAiring, getRecentAnime } from '../services/api';
 import AnimeCard from '../components/AnimeCard';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import { motion } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 
 const Home = () => {
+  const { isDarkMode } = useTheme();
   const [topAiring, setTopAiring] = useState([]);
   const [recentAnime, setRecentAnime] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,10 +35,9 @@ const Home = () => {
     fetchData();
   }, []);
 
-  // Loading state with skeleton
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 text-white">
+      <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
         <div className="container mx-auto px-4 py-8">
           <section className="mb-12">
             <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
@@ -57,10 +58,9 @@ const Home = () => {
     );
   }
 
-  // Error state with retry button
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'} flex items-center justify-center p-4`}>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -78,15 +78,13 @@ const Home = () => {
     );
   }
 
-  // Main content
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gray-900 text-white"
+      className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}
     >
       <div className="container mx-auto px-4 py-8">
-        {/* Top Airing Section */}
         <motion.section 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -106,19 +104,22 @@ const Home = () => {
                 >
                   <AnimeCard
                     anime={anime}
-                    className="bg-gray-800/50 backdrop-blur-sm rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10"
+                    className={`${
+                      isDarkMode 
+                        ? 'bg-gray-800/50' 
+                        : 'bg-white'
+                    } backdrop-blur-sm rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10`}
                   />
                 </motion.div>
               ))
             ) : (
-              <p className="col-span-full text-center text-gray-400">
+              <p className={`col-span-full text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                 No top airing anime available at the moment.
               </p>
             )}
           </div>
         </motion.section>
 
-        {/* Recent Updates Section */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -138,12 +139,16 @@ const Home = () => {
                 >
                   <AnimeCard
                     anime={anime}
-                    className="bg-gray-800/50 backdrop-blur-sm rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10"
+                    className={`${
+                      isDarkMode 
+                        ? 'bg-gray-800/50' 
+                        : 'bg-white'
+                    } backdrop-blur-sm rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10`}
                   />
                 </motion.div>
               ))
             ) : (
-              <p className="col-span-full text-center text-gray-400">
+              <p className={`col-span-full text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                 No recent updates available at the moment.
               </p>
             )}
